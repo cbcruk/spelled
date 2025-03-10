@@ -1,11 +1,15 @@
-import { auth } from '@/auth'
-import { turso } from '@/lib/turso'
+import { Session } from './_component/Session'
+import { SpellForm } from './_component/SpellForm'
+import { SpellResult } from './_component/SpellResult'
 
-async function Home() {
-  const session = await auth()
-  const result = await turso.execute('SELECT * FROM checks').catch(() => {})
-
-  return <pre>{JSON.stringify({ session, result }, null, 2)}</pre>
+function Home() {
+  return (
+    <>
+      <Session />
+      <SpellForm />
+      <SpellResult />
+    </>
+  )
 }
 
 export default Home
