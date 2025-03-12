@@ -1,7 +1,19 @@
-import { auth } from '@/auth'
+import { getSession, SessionWithUserId } from '@/auth'
+import { FC, ReactNode } from 'react'
 
-export async function Session() {
-  const session = await auth()
+export type SessionBodyProps = SessionWithUserId
 
-  return <pre>{JSON.stringify(session, null, 2)}</pre>
+type SessionProps = {
+  children: FC<SessionBodyProps>
+  fallback?: ReactNode
+}
+
+export async function Session({ children, fallback = null }: SessionProps) {
+  const session = await getSession()
+
+  if (!session) {
+    return <>{fallback}</>
+  }
+
+  return <>{children(session)}</>
 }

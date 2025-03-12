@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
+    "effect": "^3.13.9",
     "next": "15.2.1",
     "next-auth": "5.0.0-beta.25",
     "openai": "^4.86.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-error-boundary": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -1,26 +1,18 @@
-export class InvalidJsonError extends Error {
-  name = 'InvalidJsonError'
-
-  constructor(message = '잘못된 JSON 형식입니다.') {
-    super(message)
-    Object.setPrototypeOf(this, InvalidJsonError.prototype)
-  }
-}
-
-export class InvalidSessionError extends Error {
-  name = 'InvalidSessionError'
+export class SessionError extends Error {
+  name = 'SessionError'
 
   constructor(message = '세션 정보가 없습니다.') {
     super(message)
-    Object.setPrototypeOf(this, InvalidSessionError.prototype)
+    Object.setPrototypeOf(this, SessionError.prototype)
   }
 }
 
-export class InvalidDataError extends Error {
-  name = 'InvalidDataError'
+export class UnknownError extends Error {
+  name = 'UnknownError'
 
-  constructor(message = '잘못된 데이터입니다.') {
+  constructor(message = '알 수 없는 문제가 발생했습니다.') {
     super(message)
-    Object.setPrototypeOf(this, InvalidDataError.prototype)
+
+    Object.setPrototypeOf(this, UnknownError.prototype)
   }
 }

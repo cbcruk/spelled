@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth'
+import NextAuth, { Session } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import { turso } from './lib/turso'
 
@@ -45,3 +45,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 })
+
+export type SessionUserId = string
+
+export type SessionWithUserId = Session & {
+  user: {
+    id: SessionUserId
+  }
+}
+
+export async function getSession() {
+  const session = (await auth()) as SessionWithUserId
+
+  return session
+}

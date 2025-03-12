@@ -1,14 +1,33 @@
-import { auth } from '@/auth'
+import { SessionUserId } from '@/auth'
 import { turso } from '@/lib/turso'
+import { SpellResultErrorBoundary } from './SpellResultErrorBoundary'
+import { Session, SessionBodyProps } from './Session'
 
-export async function SpellResult() {
-  const session = await auth()
-  const result = await turso
-    .execute({
+async function getSpelling(id: SessionUserId) {
+  try {
+    const result = await turso.execute({
       sql: 'SELECT * FROM spelling WHERE user_id = ?',
-      args: [session?.user?.id ?? ''],
+      args: [id],
     })
-    .catch(() => null)
 
-  return <pre>{JSON.stringify(result, null, 2)}</pre>
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
+type SpellResultBodyProps = SessionBodyProps
+
+async function SpellResultBody({ user }: SpellResultBodyProps) {
+  const data = await getSpelling(user.id)
+
+  return <pre>{JSON.stringify(data, null, 2)}</pre>
+}
+
+export function SpellResult() {
+  return (
+    <SpellResultErrorBoundary>
+      <Session>{SpellResultBody}</Session>
+    </SpellResultErrorBoundary>
+  )
 }

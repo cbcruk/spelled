@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
+import { SessionProvider } from 'next-auth/react'
 import './globals.css'
 
 const notoSans = Noto_Sans_KR({
@@ -14,10 +15,12 @@ export const metadata: Metadata = {
 
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ko">
-      <body className={`${notoSans.className} antialiased`}>{children}</body>
+      <body className={`${notoSans.className} antialiased`}>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   )
 }

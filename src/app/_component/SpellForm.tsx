@@ -1,7 +1,7 @@
 'use client'
 
-import { SpellFormSave } from './SpellFormSave'
 import { SpellFormCheck } from './SpellFormCheck'
+import { SpellFormSave } from './SpellFormSave'
 
 export function SpellForm() {
   return <SpellFormCheck>{SpellFormSave}</SpellFormCheck>
