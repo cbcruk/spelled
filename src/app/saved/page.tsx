@@ -1,13 +1,11 @@
-import { SpellForm } from './_component/SpellForm'
+import { SpellResult } from './_components/SpellResult'
 
-function Home() {
+export default function SavedPage() {
   return (
     <div className="flex justify-center">
       <div className="w-full md:w-1/2">
-        <SpellForm />
+        <SpellResult />
       </div>
     </div>
   )
 }
-
-export default Home

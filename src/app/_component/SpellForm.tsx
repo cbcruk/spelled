@@ -4,5 +4,9 @@ import { SpellFormCheck } from './SpellFormCheck'
 import { SpellFormSave } from './SpellFormSave'
 
 export function SpellForm() {
-  return <SpellFormCheck>{SpellFormSave}</SpellFormCheck>
+  return (
+    <SpellFormCheck>
+      {(props) => <SpellFormSave key={props.data?.input} data={props.data} />}
+    </SpellFormCheck>
+  )
 }

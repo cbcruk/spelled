@@ -15,11 +15,10 @@ export async function checkSpellingWithScore(input: string) {
           content: [
             {
               type: 'text',
-              text: `다음 문장의 맞춤법과 문법을 검사하고, JSON 형식으로 응답하세요. 
-              또한 수정이 얼마나 쉬운지 "difficulty" 필드를 추가하세요.
-              
-              입력 문장: "${input}"
-              출력 형식 (JSON): "{
+              text: `다음 문장의 맞춤법과 문법을 검사하고, JSON 형식으로 응답하세요. 또한 수정이 얼마나 쉬운지 "difficulty" 필드를 추가하세요.
+              응답포멧은 다음 구조를 따르는 JSON으로 반환해주시면 됩니다.
+
+              {
                 "input": "(사용자가 입력한 원본 문장)",
                 "corrected": "(맞춤법과 문법이 수정된 문장)",
                 "score": (0~100 사이의 점수),
@@ -31,7 +30,7 @@ export async function checkSpellingWithScore(input: string) {
                     "difficulty": "(easy | medium | hard)"
                   }
                 ]
-              }"`,
+              }`,
             },
           ],
         },

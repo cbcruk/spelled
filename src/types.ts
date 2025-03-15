@@ -1,4 +1,5 @@
 export interface Spelled {
+  id: string
   input: string
   corrected: string
   score: number

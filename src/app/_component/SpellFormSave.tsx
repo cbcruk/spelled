@@ -3,13 +3,14 @@
 import { useActionState } from 'react'
 import { createSpelling } from './SpellFormSave.actions'
 import { CheckSpellingStateData } from './SpellFormCheck.actions'
+import { BookmarkIcon } from '@radix-ui/react-icons'
 
 type SpellFormSaveProps = {
   data: CheckSpellingStateData
 }
 
 export function SpellFormSave({ data }: SpellFormSaveProps) {
-  const [state, formAction, isPending] = useActionState(
+  const [, formAction, isPending] = useActionState(
     createSpelling.bind(null, data),
     {
       data: null,
@@ -19,9 +20,9 @@ export function SpellFormSave({ data }: SpellFormSaveProps) {
 
   return (
     <form action={formAction}>
-      <pre>{JSON.stringify(state, null, 2)}</pre>
-      <p aria-live="polite">{state.error?.message}</p>
-      <button disabled={isPending}>저장하기</button>
+      <button disabled={isPending} title="저장하기" className="cursor-pointer">
+        <BookmarkIcon />
+      </button>
     </form>
   )
 }
