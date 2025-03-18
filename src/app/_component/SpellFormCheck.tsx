@@ -54,7 +54,7 @@ export function SpellFormCheck({ children }: SpellFormCheckProps) {
           <div className="pt-4">
             <button
               disabled={isPending}
-              className="w-full p-2 bg-green-600 rounded-lg text-xs hover:font-bold hover:shadow cursor-pointer transition-all disabled:opacity-25"
+              className="w-full p-2 bg-green-600 rounded-lg text-xs hover:font-bold hover:shadow cursor-pointer transition-all disabled:opacity-20"
             >
               검사하기
             </button>
