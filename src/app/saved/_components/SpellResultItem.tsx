@@ -35,10 +35,10 @@ export function SpellResultItem({ data }: SpellResultItemProps) {
       <div className="flex items-center justify-between p-4">
         <div className="flex flex-col gap-2 pr-4">
           <SpellResultItemInputWithMark
-            marked={data.corrections.map((correction) => correction.wrong)}
-          >
-            {data.input}
-          </SpellResultItemInputWithMark>
+            textToHighlight={data.input}
+            searchWords={data.corrections.map((correction) => correction.wrong)}
+            highlightClassName="px-0.5 rounded-md bg-red-300 font-medium"
+          />
           <div className="flex gap-2">
             <div className="flex gap-1 items-center">
               <span className="inline-flex items-center gap-1 p-0 py-0.5 rounded-lg text-xs font-medium">
@@ -64,10 +64,14 @@ export function SpellResultItem({ data }: SpellResultItemProps) {
       </div>
       <CollapsibleContent>
         <div className="flex flex-col gap-4 p-4 border-t border-gray-800">
-          <div className="flex justify-between items-center gap-2 text-xs font-mono">
-            <p className="inline-flex p-2 rounded-lg bg-gray-900 leading-relaxed">
-              {data.corrected}
-            </p>
+          <div className="flex justify-between items-center gap-2 text-xs">
+            <SpellResultItemInputWithMark
+              textToHighlight={data.corrected}
+              searchWords={data.corrections.map(
+                (correction) => correction.correct
+              )}
+              highlightClassName="px-0.5 rounded-md bg-green-300 font-medium"
+            />
             <div className="flex items-center gap-1">
               <SpellResultItemDelete id={data.id} />
             </div>

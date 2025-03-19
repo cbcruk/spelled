@@ -1,6 +1,7 @@
 'use client'
 
 import { ComponentProps, useActionState } from 'react'
+import Highlighter from 'react-highlight-words'
 import { checkSpelling } from './SpellFormCheck.actions'
 import { SpellFormSave } from './SpellFormSave'
 import {
@@ -100,7 +101,14 @@ export function SpellFormCheck({ children }: SpellFormCheckProps) {
                 <InputIcon /> 원본 텍스트
               </SpellFormCheckCorrectionLabel>
               <SpellFormCheckCorrectionBody>
-                {state.data?.input ?? '-'}
+                <Highlighter
+                  textToHighlight={state.data.input ?? '-'}
+                  searchWords={state.data.corrections.map(
+                    (correction) => correction.wrong
+                  )}
+                  className="leading-relaxed"
+                  highlightClassName="p-0.5 rounded-md font-medium bg-red-300 text-red-900"
+                />
               </SpellFormCheckCorrectionBody>
             </SpellFormCheckCorrection>
 
@@ -109,7 +117,14 @@ export function SpellFormCheck({ children }: SpellFormCheckProps) {
                 <MagicWandIcon /> 수정된 텍스트
               </SpellFormCheckCorrectionLabel>
               <SpellFormCheckCorrectionBody>
-                {state.data?.corrected ?? '-'}
+                <Highlighter
+                  textToHighlight={state.data.corrected ?? '-'}
+                  searchWords={state.data.corrections.map(
+                    (correction) => correction.correct
+                  )}
+                  className="leading-relaxed"
+                  highlightClassName="p-0.5 rounded-md font-medium bg-green-300 text-green-900"
+                />
               </SpellFormCheckCorrectionBody>
             </SpellFormCheckCorrection>
 
