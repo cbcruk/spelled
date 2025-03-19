@@ -1,1 +1,1 @@
-# 💯 Spelled
+# 🔮 Spelled
