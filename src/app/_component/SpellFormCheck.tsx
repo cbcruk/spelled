@@ -3,8 +3,19 @@
 import { ComponentProps, useActionState } from 'react'
 import { checkSpelling } from './SpellFormCheck.actions'
 import { SpellFormSave } from './SpellFormSave'
-import { SpellFormCheckCorrection } from './SpellFormCheckCorrection'
+import {
+  SpellFormCheckCorrection,
+  SpellFormCheckCorrectionBody,
+  SpellFormCheckCorrectionLabel,
+} from './SpellFormCheckCorrection'
 import { Difficulty } from '@/constants'
+import {
+  ArrowRightIcon,
+  DividerVerticalIcon,
+  InputIcon,
+  MagicWandIcon,
+  TargetIcon,
+} from '@radix-ui/react-icons'
 
 type SpellFormCheckProps = {
   children: typeof SpellFormSave
@@ -75,35 +86,54 @@ export function SpellFormCheck({ children }: SpellFormCheckProps) {
             </p>
           </div>
           <div className="flex flex-col gap-4">
-            <SpellFormCheckCorrection label="점수">
-              {state.data?.score ?? '-'}
+            <SpellFormCheckCorrection>
+              <SpellFormCheckCorrectionLabel>
+                <TargetIcon /> 점수
+              </SpellFormCheckCorrectionLabel>
+              <SpellFormCheckCorrectionBody>
+                {state.data?.score ?? '0'}점
+              </SpellFormCheckCorrectionBody>
             </SpellFormCheckCorrection>
-            <SpellFormCheckCorrection label="원본 텍스트">
-              {state.data?.input ?? '-'}
+
+            <SpellFormCheckCorrection>
+              <SpellFormCheckCorrectionLabel>
+                <InputIcon /> 원본 텍스트
+              </SpellFormCheckCorrectionLabel>
+              <SpellFormCheckCorrectionBody>
+                {state.data?.input ?? '-'}
+              </SpellFormCheckCorrectionBody>
             </SpellFormCheckCorrection>
-            <SpellFormCheckCorrection label="수정된 텍스트">
-              {state.data?.corrected ?? '-'}
+
+            <SpellFormCheckCorrection>
+              <SpellFormCheckCorrectionLabel>
+                <MagicWandIcon /> 수정된 텍스트
+              </SpellFormCheckCorrectionLabel>
+              <SpellFormCheckCorrectionBody>
+                {state.data?.corrected ?? '-'}
+              </SpellFormCheckCorrectionBody>
             </SpellFormCheckCorrection>
-            <hr className="border-gray-600" />
-            <div className="p-0">
+
+            <hr className="border-gray-800" />
+            <div className="flex flex-col gap-2">
               {state.data?.corrections.map((correction, index) => {
                 return (
                   <div key={index}>
-                    <div className="flex justify-between items-center text-xs">
+                    <div className="flex items-center gap-1 text-xs">
                       <div className="inline-flex items-center gap-1 font-mono">
-                        <span className="p-1 rounded-lg bg-red-200 text-red-800">
+                        <span className="p-1 rounded-lg bg-red-300 text-red-900">
                           {correction.wrong}
                         </span>
-                        →
-                        <span className="p-1 rounded-lg bg-green-200 text-green-800">
+                        <ArrowRightIcon />
+                        <span className="p-1 rounded-lg bg-green-300 text-green-900">
                           {correction.correct}
                         </span>
                       </div>
+                      <DividerVerticalIcon />
+                      <span className="p-1 py-0.5 text-xs bg-purple-300 text-purple-800 rounded-lg font-medium">
+                        {Difficulty.toHangul(correction.difficulty)}
+                      </span>
                     </div>
                     <p className="inline-flex gap-1 py-2 text-sm">
-                      <span data-difficulty={correction.difficulty}>
-                        {Difficulty.toEmoji(correction.difficulty)}
-                      </span>
                       {correction.explanation}
                     </p>
                   </div>
