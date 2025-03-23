@@ -1,7 +1,7 @@
-import { Spelled } from '@/types'
 import { TrashIcon } from '@radix-ui/react-icons'
 import { useActionState } from 'react'
 import { deleteSpelling } from './SpellResultItemDelete.actions'
+import { Spelled } from '@/schema'
 
 type SpellResultItemDeleteProps = Pick<Spelled, 'id'>
 

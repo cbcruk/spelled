@@ -1,6 +1,6 @@
 import { UnknownError } from '@/errors'
 import { checkSpellingWithScore } from '@/lib/open-ai'
-import { Spelled } from '@/types'
+import { Spelled } from '@/schema'
 
 export type CheckSpellingStateData = Spelled | null
 

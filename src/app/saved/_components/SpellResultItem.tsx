@@ -1,7 +1,6 @@
 'use client'
 
 import { Difficulty } from '@/constants'
-import { Spelled } from '@/types'
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -18,6 +17,7 @@ import {
 import { useState } from 'react'
 import { SpellResultItemInputWithMark } from './SpellResultItemInputText'
 import { SpellResultItemDelete } from './SpellResultItemDelete'
+import { Spelled } from '@/schema'
 
 type SpellResultItemProps = {
   data: Spelled
