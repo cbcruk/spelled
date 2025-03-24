@@ -17,22 +17,10 @@ import {
   MagicWandIcon,
   TargetIcon,
 } from '@radix-ui/react-icons'
+import { Match } from 'effect'
 
 type SpellFormCheckProps = {
   children: typeof SpellFormSave
-}
-
-function useCheckSpellingActionState() {
-  const initialState = {
-    data: null,
-    error: null,
-  }
-  const actionState = useActionState<
-    ReturnType<typeof checkSpelling>,
-    FormData
-  >(checkSpelling, initialState)
-
-  return actionState
 }
 
 function SpellFormCheckCard({ children }: ComponentProps<'div'>) {
@@ -44,7 +32,13 @@ function SpellFormCheckCard({ children }: ComponentProps<'div'>) {
 }
 
 export function SpellFormCheck({ children }: SpellFormCheckProps) {
-  const [state, formAction, isPending] = useCheckSpellingActionState()
+  const [state, formAction, isPending] = useActionState(
+    (_: unknown, formData: FormData) => {
+      const input = formData.get('input') as string
+      return checkSpelling(input)
+    },
+    null
+  )
 
   return (
     <div className="flex flex-col gap-4">
@@ -73,90 +67,93 @@ export function SpellFormCheck({ children }: SpellFormCheckProps) {
           </div>
         </form>
       </SpellFormCheckCard>
-      {state.data && (
-        <SpellFormCheckCard>
-          <div className="flex flex-col gap-1 pb-4">
-            <div className="flex justify-between">
-              <h2 className="font-bold">교정</h2>
-              {children({
-                data: state.data,
-              })}
+      {Match.value(state).pipe(
+        Match.when({ data: Match.defined }, (state) => (
+          <SpellFormCheckCard>
+            <div className="flex flex-col gap-1 pb-4">
+              <div className="flex justify-between">
+                <h2 className="font-bold">교정</h2>
+                {children({
+                  data: state.data,
+                })}
+              </div>
+              <p className="text-sm text-gray-600">
+                제안된 수정 사항을 검토하세요.
+              </p>
             </div>
-            <p className="text-sm text-gray-600">
-              제안된 수정 사항을 검토하세요.
-            </p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <SpellFormCheckCorrection>
-              <SpellFormCheckCorrectionLabel>
-                <TargetIcon /> 점수
-              </SpellFormCheckCorrectionLabel>
-              <SpellFormCheckCorrectionBody>
-                {state.data?.score ?? '0'}점
-              </SpellFormCheckCorrectionBody>
-            </SpellFormCheckCorrection>
+            <div className="flex flex-col gap-4">
+              <SpellFormCheckCorrection>
+                <SpellFormCheckCorrectionLabel>
+                  <TargetIcon /> 점수
+                </SpellFormCheckCorrectionLabel>
+                <SpellFormCheckCorrectionBody>
+                  {state.data?.score ?? '0'}점
+                </SpellFormCheckCorrectionBody>
+              </SpellFormCheckCorrection>
 
-            <SpellFormCheckCorrection>
-              <SpellFormCheckCorrectionLabel>
-                <InputIcon /> 원본 텍스트
-              </SpellFormCheckCorrectionLabel>
-              <SpellFormCheckCorrectionBody>
-                <Highlighter
-                  textToHighlight={state.data.input ?? '-'}
-                  searchWords={state.data.corrections.map(
-                    (correction) => correction.wrong
-                  )}
-                  className="leading-relaxed"
-                  highlightClassName="p-0.5 rounded-md font-medium bg-red-300 text-red-900"
-                />
-              </SpellFormCheckCorrectionBody>
-            </SpellFormCheckCorrection>
+              <SpellFormCheckCorrection>
+                <SpellFormCheckCorrectionLabel>
+                  <InputIcon /> 원본 텍스트
+                </SpellFormCheckCorrectionLabel>
+                <SpellFormCheckCorrectionBody>
+                  <Highlighter
+                    textToHighlight={state.data.input ?? '-'}
+                    searchWords={state.data.corrections.map(
+                      (correction) => correction.wrong
+                    )}
+                    className="leading-relaxed"
+                    highlightClassName="p-0.5 rounded-md font-medium bg-red-300 text-red-900"
+                  />
+                </SpellFormCheckCorrectionBody>
+              </SpellFormCheckCorrection>
 
-            <SpellFormCheckCorrection>
-              <SpellFormCheckCorrectionLabel>
-                <MagicWandIcon /> 수정된 텍스트
-              </SpellFormCheckCorrectionLabel>
-              <SpellFormCheckCorrectionBody>
-                <Highlighter
-                  textToHighlight={state.data.corrected ?? '-'}
-                  searchWords={state.data.corrections.map(
-                    (correction) => correction.correct
-                  )}
-                  className="leading-relaxed"
-                  highlightClassName="p-0.5 rounded-md font-medium bg-green-300 text-green-900"
-                />
-              </SpellFormCheckCorrectionBody>
-            </SpellFormCheckCorrection>
+              <SpellFormCheckCorrection>
+                <SpellFormCheckCorrectionLabel>
+                  <MagicWandIcon /> 수정된 텍스트
+                </SpellFormCheckCorrectionLabel>
+                <SpellFormCheckCorrectionBody>
+                  <Highlighter
+                    textToHighlight={state.data.corrected ?? '-'}
+                    searchWords={state.data.corrections.map(
+                      (correction) => correction.correct
+                    )}
+                    className="leading-relaxed"
+                    highlightClassName="p-0.5 rounded-md font-medium bg-green-300 text-green-900"
+                  />
+                </SpellFormCheckCorrectionBody>
+              </SpellFormCheckCorrection>
 
-            <hr className="border-gray-800" />
-            <div className="flex flex-col gap-2">
-              {state.data?.corrections.map((correction, index) => {
-                return (
-                  <div key={index}>
-                    <div className="flex items-center gap-1 text-xs">
-                      <div className="inline-flex items-center gap-1 font-mono">
-                        <span className="p-1 rounded-lg bg-red-300 text-red-900">
-                          {correction.wrong}
-                        </span>
-                        <ArrowRightIcon />
-                        <span className="p-1 rounded-lg bg-green-300 text-green-900">
-                          {correction.correct}
+              <hr className="border-gray-800" />
+              <div className="flex flex-col gap-2">
+                {state.data?.corrections.map((correction, index) => {
+                  return (
+                    <div key={index}>
+                      <div className="flex items-center gap-1 text-xs">
+                        <div className="inline-flex items-center gap-1 font-mono">
+                          <span className="p-1 rounded-lg bg-red-300 text-red-900">
+                            {correction.wrong}
+                          </span>
+                          <ArrowRightIcon />
+                          <span className="p-1 rounded-lg bg-green-300 text-green-900">
+                            {correction.correct}
+                          </span>
+                        </div>
+                        <DividerVerticalIcon />
+                        <span className="p-1 py-0.5 text-xs bg-purple-300 text-purple-800 rounded-lg font-medium">
+                          {Difficulty.toHangul(correction.difficulty)}
                         </span>
                       </div>
-                      <DividerVerticalIcon />
-                      <span className="p-1 py-0.5 text-xs bg-purple-300 text-purple-800 rounded-lg font-medium">
-                        {Difficulty.toHangul(correction.difficulty)}
-                      </span>
+                      <p className="inline-flex gap-1 py-2 text-sm">
+                        {correction.explanation}
+                      </p>
                     </div>
-                    <p className="inline-flex gap-1 py-2 text-sm">
-                      {correction.explanation}
-                    </p>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        </SpellFormCheckCard>
+          </SpellFormCheckCard>
+        )),
+        Match.orElse(() => null)
       )}
     </div>
   )

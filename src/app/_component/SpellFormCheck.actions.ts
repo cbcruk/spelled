@@ -1,27 +1,32 @@
-import { UnknownError } from '@/errors'
-import { checkSpellingWithScore } from '@/lib/open-ai'
-import { Spelled } from '@/schema'
+'use server'
+
+import { decodeSpelled, Spelled } from '@/schema'
+import { OpenAIService, OpenAIServiceLive } from '@/services/OpenAI'
+import { Effect } from 'effect'
 
 export type CheckSpellingStateData = Spelled | null
 
-export async function checkSpelling(
-  _prevState: {
-    data: CheckSpellingStateData
-    error: Error | null
-  },
-  formData: FormData
-) {
-  try {
-    const data = await checkSpellingWithScore(formData.get('input') as string)
+export const checkSpelling = async (text: string) =>
+  Effect.runPromise(
+    Effect.gen(function* () {
+      const content = yield* OpenAIService.pipe(
+        Effect.andThen((openAI) => openAI.create(text))
+      ).pipe(Effect.provide(OpenAIServiceLive))
+      const data = yield* decodeSpelled(JSON.parse(content ?? ''))
 
-    return {
-      data,
-      error: null,
-    }
-  } catch (error) {
-    return {
-      data: null,
-      error: error instanceof Error ? error : new UnknownError(),
-    }
-  }
-}
+      return data
+    }).pipe(
+      Effect.match({
+        onSuccess: (data) => {
+          return {
+            data,
+          }
+        },
+        onFailure(error) {
+          return {
+            error,
+          }
+        },
+      })
+    )
+  )

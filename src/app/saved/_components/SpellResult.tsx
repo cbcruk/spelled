@@ -1,36 +1,13 @@
-import { SessionUserId } from '@/auth'
-import { turso } from '@/lib/turso'
 import { SpellResultErrorBoundary } from './SpellResultErrorBoundary'
 import { Session, SessionBodyProps } from '../../_component/Session/Session'
 import { SpellResultItem } from './SpellResultItem'
-import { Data, Effect, Match, Schema } from 'effect'
+import { Effect, Match, Schema } from 'effect'
 import { SpelledSchema } from '@/schema'
 import { ResultSet } from '@libsql/client'
+import { DatabaseError, TursoService, TursoServiceLive } from '@/services/Turso'
+import { SessionUserId } from '@/auth'
 
-class DatabaseError extends Data.TaggedError('DatabaseError')<{
-  readonly message: string
-  readonly cause: unknown
-}> {}
-
-const querySpelling = (
-  id: SessionUserId
-): Effect.Effect<ResultSet, DatabaseError> =>
-  Effect.tryPromise({
-    try: async () => {
-      const result = await turso.execute({
-        sql: 'SELECT * FROM spelling WHERE user_id = ?',
-        args: [id],
-      })
-
-      return result
-    },
-    catch: (e) => {
-      throw new DatabaseError({
-        cause: e,
-        message: `데이터 조회에 실패했습니다.`,
-      })
-    },
-  })
+type SpellResultBodyProps = SessionBodyProps
 
 const decodeSpelling = (result: ResultSet) =>
   Effect.gen(function* () {
@@ -49,15 +26,34 @@ const decodeSpelling = (result: ResultSet) =>
     return decoded
   })
 
-type SpellResultBodyProps = SessionBodyProps
+const findSpellingByUserId = (id: SessionUserId) =>
+  TursoService.pipe(
+    Effect.andThen((turso) =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await turso.execute({
+            sql: 'SELECT * FROM spelling WHERE user_id = ?',
+            args: [id],
+          })
 
-const main = (id: string) =>
+          return result
+        },
+        catch: (e) =>
+          new DatabaseError({
+            cause: e,
+            message: `데이터 조회에 실패했습니다.`,
+          }),
+      })
+    )
+  )
+
+const main = (id: SessionUserId) =>
   Effect.gen(function* () {
-    const result = yield* querySpelling(id)
+    const result = yield* findSpellingByUserId(id)
     const data = yield* decodeSpelling(result)
 
     return data
-  })
+  }).pipe(Effect.provide(TursoServiceLive))
 
 async function SpellResultBody({ user }: SpellResultBodyProps) {
   return (

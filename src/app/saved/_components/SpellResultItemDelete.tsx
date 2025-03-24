@@ -6,10 +6,7 @@ import { Spelled } from '@/schema'
 type SpellResultItemDeleteProps = Pick<Spelled, 'id'>
 
 export function SpellResultItemDelete({ id }: SpellResultItemDeleteProps) {
-  const [, formAction, isPending] = useActionState(deleteSpelling, {
-    data: null,
-    error: null,
-  })
+  const [, formAction, isPending] = useActionState(deleteSpelling, null)
 
   return (
     <form action={formAction}>

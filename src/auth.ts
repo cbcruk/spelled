@@ -1,6 +1,7 @@
 import NextAuth, { Session } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import { turso } from './lib/turso'
+import { Data, Effect } from 'effect'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub],
@@ -54,8 +55,17 @@ export type SessionWithUserId = Session & {
   }
 }
 
-export async function getSession() {
-  const session = (await auth()) as SessionWithUserId
+export class AuthError extends Data.TaggedError('AuthError')<{
+  readonly message: string
+  readonly cause: unknown
+}> {}
 
-  return session
-}
+export class SessionError extends Data.TaggedError('SessionError')<{
+  readonly message: string
+}> {}
+
+export const getSession = Effect.tryPromise({
+  try: () => auth() as Promise<SessionWithUserId | null>,
+  catch: (e) =>
+    new AuthError({ cause: e, message: '인증에러가 발생했습니다.' }),
+})

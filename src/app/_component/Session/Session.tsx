@@ -1,4 +1,5 @@
 import { getSession, SessionWithUserId } from '@/auth'
+import { Effect, Match } from 'effect'
 import { FC, ReactNode } from 'react'
 
 export type SessionBodyProps = SessionWithUserId
@@ -9,11 +10,20 @@ type SessionProps = {
 }
 
 export async function Session({ children, fallback = null }: SessionProps) {
-  const session = await getSession()
-
-  if (!session) {
-    return <>{fallback}</>
-  }
-
-  return <>{children(session)}</>
+  return (
+    <>
+      {await Effect.runPromise(
+        getSession.pipe(
+          Effect.match({
+            onSuccess: (session) =>
+              Match.value(session).pipe(
+                Match.when(null, () => <>{fallback}</>),
+                Match.orElse((session) => <>{children(session)}</>)
+              ),
+            onFailure: (error) => <pre>{error.message}</pre>,
+          })
+        )
+      )}
+    </>
+  )
 }
