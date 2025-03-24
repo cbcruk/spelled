@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@effect/ai-openai':
+        specifier: ^0.16.2
+        version: 0.16.2(@effect/ai@0.13.1(@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9)
       '@libsql/client':
         specifier: ^0.14.0
         version: 0.14.0
@@ -99,6 +102,39 @@ packages:
   '@babel/runtime@7.26.10':
     resolution: {integrity: sha512-2WJMeRQPHKSPemqk/awGrAiuFfzBmOIPXKizAsVhWH9YJqLZ0H+HS4c8loHGgW6utJ3E/ejXQUsiGaQy2NZ9Fw==}
     engines: {node: '>=6.9.0'}
+
+  '@effect/ai-openai@0.16.2':
+    resolution: {integrity: sha512-ejbG789MoYtNIk+WD/BaPx8e80nSlzDgCvp8ClGFBrYvfToqbl4QMe+6YSpdQKPql21uEEKNlegjwNHauHiv+w==}
+    peerDependencies:
+      '@effect/ai': ^0.13.1
+      '@effect/experimental': ^0.44.1
+      '@effect/platform': ^0.80.1
+      effect: ^3.14.1
+
+  '@effect/ai@0.13.1':
+    resolution: {integrity: sha512-41AEl3TVix40I8i7BIzMA/baFP1XqFf4sIbGLaztNjr51aSpWHGuuy9EUWvc0QFdJyTrB8ipjOhS+FMABzg21w==}
+    peerDependencies:
+      '@effect/experimental': ^0.44.1
+      '@effect/platform': ^0.80.1
+      effect: ^3.14.1
+
+  '@effect/experimental@0.44.1':
+    resolution: {integrity: sha512-Qg4iZAvTGi+OBZ0IoTOrpM3GFpxj5umaqYlGmcvfHAEHLuuSeypaWoOQrPCaOOqUMmcTUvoEuZuIROHmy34LKQ==}
+    peerDependencies:
+      '@effect/platform': ^0.80.1
+      effect: ^3.14.1
+      ioredis: ^5
+      lmdb: ^3
+    peerDependenciesMeta:
+      ioredis:
+        optional: true
+      lmdb:
+        optional: true
+
+  '@effect/platform@0.80.1':
+    resolution: {integrity: sha512-unObetsvXAk4HJn1DM/icnzOjyQ9B2xpUm+jE+g3Oc9OAi0VHVVF3F3eEsw+hWG8deJ46zWjz3Z3iCSi0ER5eQ==}
+    peerDependencies:
+      effect: ^3.14.1
 
   '@emnapi/runtime@1.3.1':
     resolution: {integrity: sha512-kEBmG8KyqtxJZv+ygbEim+KCGtIq1fC22Ms3S4ziXmYKm8uyoLX0MHONVKwp+9opg390VaKRNt4a7A9NwmpNhw==}
@@ -314,6 +350,36 @@ packages:
 
   '@libsql/win32-x64-msvc@0.4.7':
     resolution: {integrity: sha512-7pJzOWzPm6oJUxml+PCDRzYQ4A1hTMHAciTAHfFK4fkbDZX33nWPVG7Y3vqdKtslcwAzwmrNDc6sXy2nwWnbiw==}
+    cpu: [x64]
+    os: [win32]
+
+  '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
+    resolution: {integrity: sha512-QZHtlVgbAdy2zAqNA9Gu1UpIuI8Xvsd1v8ic6B2pZmeFnFcMWiPLfWXh7TVw4eGEZ/C9TH281KwhVoeQUKbyjw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.3':
+    resolution: {integrity: sha512-mdzd3AVzYKuUmiWOQ8GNhl64/IoFGol569zNRdkLReh6LRLHOXxU4U8eq0JwaD8iFHdVGqSy4IjFL4reoWCDFw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.3':
+    resolution: {integrity: sha512-YxQL+ax0XqBJDZiKimS2XQaf+2wDGVa1enVRGzEvLLVFeqa5kx2bWbtcSXgsxjQB7nRqqIGFIcLteF/sHeVtQg==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.3':
+    resolution: {integrity: sha512-fg0uy/dG/nZEXfYilKoRe7yALaNmHoYeIoJuJ7KJ+YyU2bvY8vPv27f7UKhGRpY6euFYqEVhxCFZgAUNQBM3nw==}
+    cpu: [arm]
+    os: [linux]
+
+  '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3':
+    resolution: {integrity: sha512-cvwNfbP07pKUfq1uH+S6KJ7dT9K8WOE4ZiAcsrSes+UY55E/0jLYc+vq+DO7jlmqRb5zAggExKm0H7O/CBaesg==}
+    cpu: [x64]
+    os: [linux]
+
+  '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3':
+    resolution: {integrity: sha512-x0fWaQtYp4E6sktbsdAqnehxDgEc/VwM7uLsRCYWaiGu0ykYdZPiS8zCWdnjHwyiumousxfBm4SO31eXqwEZhQ==}
     cpu: [x64]
     os: [win32]
 
@@ -1118,6 +1184,9 @@ packages:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
 
+  find-my-way-ts@0.1.5:
+    resolution: {integrity: sha512-4GOTMrpGQVzsCH2ruUn2vmwzV/02zF4q+ybhCIrw/Rkt3L8KWcycdC6aJMctJzwN4fXD4SD5F/4B9Sksh5rE0A==}
+
   find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
@@ -1192,6 +1261,9 @@ packages:
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
+
+  gpt-tokenizer@2.9.0:
+    resolution: {integrity: sha512-YSpexBL/k4bfliAzMrRqn3M6+it02LutVyhVpDeMKrC/O9+pCe/5s8U2hYKa2vFLD5/vHhsKc8sOn/qGqII8Kg==}
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
@@ -1523,6 +1595,16 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
+  msgpackr-extract@3.0.3:
+    resolution: {integrity: sha512-P0efT1C9jIdVRefqjzOQ9Xml57zpOXnIuS+csaB4MdZbTdmGDLo8XhzBG1N7aO11gKDDkJvBLULeFTo46wwreA==}
+    hasBin: true
+
+  msgpackr@1.11.2:
+    resolution: {integrity: sha512-F9UngXRlPyWCDEASDpTf6c9uNhGPTqnTeLVt7bN+bU1eajoR/8V9ys2BRaV5C/e5ihE6sJ9uPIKaYt6bFuO32g==}
+
+  multipasta@0.2.5:
+    resolution: {integrity: sha512-c8eMDb1WwZcE02WVjHoOmUVk7fnKU/RmUcosHACglrWAuPQsEJv+E8430sXj6jNc1jHw0zrS16aCjQh4BcEb4A==}
+
   nanoid@3.3.9:
     resolution: {integrity: sha512-SppoicMGpZvbF1l3z4x7No3OlIjP7QJvC9XR7AhZr1kL133KHnKPztkKDc+Ir4aJ/1VhTySrtKhrsycmrMQfvg==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -1584,6 +1666,10 @@ packages:
   node-fetch@3.3.2:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  node-gyp-build-optional-packages@5.2.2:
+    resolution: {integrity: sha512-s+w+rBWnpTMwSFbaE0UXsRlg7hU4FjekKU4eyAih5T8nJuNZT1nNsskXpxmeqSK9UzkBl6UgRlnKc8hz8IEqOw==}
+    hasBin: true
 
   oauth4webapi@3.3.0:
     resolution: {integrity: sha512-ZlozhPlFfobzh3hB72gnBFLjXpugl/dljz1fJSRdqaV2r3D5dmi5lg2QWI0LmUYuazmE+b5exsloEv6toUtw9g==}
@@ -1971,6 +2057,10 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
+  uuid@11.1.0:
+    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
+
   web-streams-polyfill@3.3.3:
     resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
     engines: {node: '>= 8'}
@@ -2043,6 +2133,33 @@ snapshots:
   '@babel/runtime@7.26.10':
     dependencies:
       regenerator-runtime: 0.14.1
+
+  '@effect/ai-openai@0.16.2(@effect/ai@0.13.1(@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9)':
+    dependencies:
+      '@effect/ai': 0.13.1(@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9)
+      '@effect/experimental': 0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9)
+      '@effect/platform': 0.80.1(effect@3.13.9)
+      effect: 3.13.9
+      gpt-tokenizer: 2.9.0
+
+  '@effect/ai@0.13.1(@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9)':
+    dependencies:
+      '@effect/experimental': 0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9)
+      '@effect/platform': 0.80.1(effect@3.13.9)
+      effect: 3.13.9
+
+  '@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9)':
+    dependencies:
+      '@effect/platform': 0.80.1(effect@3.13.9)
+      effect: 3.13.9
+      uuid: 11.1.0
+
+  '@effect/platform@0.80.1(effect@3.13.9)':
+    dependencies:
+      effect: 3.13.9
+      find-my-way-ts: 0.1.5
+      msgpackr: 1.11.2
+      multipasta: 0.2.5
 
   '@emnapi/runtime@1.3.1':
     dependencies:
@@ -2235,6 +2352,24 @@ snapshots:
     optional: true
 
   '@libsql/win32-x64-msvc@0.4.7':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3':
+    optional: true
+
+  '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3':
     optional: true
 
   '@neon-rs/load@0.0.4': {}
@@ -3167,6 +3302,8 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
+  find-my-way-ts@0.1.5: {}
+
   find-up@5.0.0:
     dependencies:
       locate-path: 6.0.0
@@ -3258,6 +3395,8 @@ snapshots:
       gopd: 1.2.0
 
   gopd@1.2.0: {}
+
+  gpt-tokenizer@2.9.0: {}
 
   graceful-fs@4.2.11: {}
 
@@ -3572,6 +3711,24 @@ snapshots:
 
   ms@2.1.3: {}
 
+  msgpackr-extract@3.0.3:
+    dependencies:
+      node-gyp-build-optional-packages: 5.2.2
+    optionalDependencies:
+      '@msgpackr-extract/msgpackr-extract-darwin-arm64': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-darwin-x64': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-linux-arm': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-linux-arm64': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-linux-x64': 3.0.3
+      '@msgpackr-extract/msgpackr-extract-win32-x64': 3.0.3
+    optional: true
+
+  msgpackr@1.11.2:
+    optionalDependencies:
+      msgpackr-extract: 3.0.3
+
+  multipasta@0.2.5: {}
+
   nanoid@3.3.9: {}
 
   natural-compare@1.4.0: {}
@@ -3618,6 +3775,11 @@ snapshots:
       data-uri-to-buffer: 4.0.1
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
+
+  node-gyp-build-optional-packages@5.2.2:
+    dependencies:
+      detect-libc: 2.0.3
+    optional: true
 
   oauth4webapi@3.3.0: {}
 
@@ -4083,6 +4245,8 @@ snapshots:
   uri-js@4.4.1:
     dependencies:
       punycode: 2.3.1
+
+  uuid@11.1.0: {}
 
   web-streams-polyfill@3.3.3: {}
 

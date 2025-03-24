@@ -1,10 +1,13 @@
 import { Context, Data, Effect, Layer } from 'effect'
 import { openAI } from '@/lib/open-ai'
+import OpenAI from 'openai'
 
 export class OpenAIService extends Context.Tag('OpenAIService')<
   OpenAIService,
   {
-    create: (text: string) => Effect.Effect<string | null, OpenAIError>
+    create: (
+      body: OpenAI.ChatCompletionCreateParamsNonStreaming
+    ) => Effect.Effect<OpenAI.ChatCompletion, OpenAIError>
   }
 >() {}
 
@@ -14,33 +17,11 @@ class OpenAIError extends Data.TaggedError('OpenAIError')<{
 }> {}
 
 export const OpenAIServiceLive = Layer.succeed(OpenAIService, {
-  create: (text: string) =>
+  create: (body) =>
     Effect.tryPromise({
       try: async () => {
-        const chatCompletion = await openAI.chat.completions.create({
-          model: 'gpt-4o-mini',
-          messages: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text,
-                },
-              ],
-            },
-          ],
-          response_format: {
-            type: 'text',
-          },
-          temperature: 1,
-          max_completion_tokens: 2048,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-        })
-
-        return chatCompletion.choices[0]?.message.content
+        const chatCompletion = await openAI.chat.completions.create(body)
+        return chatCompletion
       },
       catch: (e) =>
         new OpenAIError({
