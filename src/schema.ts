@@ -20,3 +20,15 @@ export const SpelledSchema = Schema.Struct({
 export const decodeSpelled = Schema.decodeUnknown(SpelledSchema)
 
 export type Spelled = Schema.Schema.Type<typeof SpelledSchema>
+
+export const UserSchema = Schema.Struct({
+  id: Schema.String,
+  name: Schema.String,
+  email: Schema.String,
+  image: Schema.String,
+  created: Schema.String,
+  updated: Schema.String,
+})
+
+export const decodeUser = Schema.decodeUnknown(UserSchema)
+export const decodeUserId = Schema.decodeUnknown(UserSchema.pick('id'))

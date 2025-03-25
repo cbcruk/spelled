@@ -19,19 +19,17 @@ export const deleteSpelling = async (_: unknown, formData: FormData) =>
       }
 
       const id = formData.get('id') as string
-      const result = yield* TursoService.pipe(
-        Effect.andThen((turso) =>
-          turso.execute({
-            sql: 'DELETE FROM spelling WHERE user_id = ? AND id = ?',
-            args: [session.user.id, id],
-          })
-        )
-      ).pipe(Effect.provide(TursoServiceLive))
+      const turso = yield* TursoService
+      const result = yield* turso.execute({
+        sql: 'DELETE FROM spelling WHERE user_id = ? AND id = ?',
+        args: [session.user.id, id],
+      })
 
       revalidatePath('/saved')
 
       return result
     }).pipe(
+      Effect.provide(TursoServiceLive),
       Effect.match({
         onSuccess(data) {
           return {

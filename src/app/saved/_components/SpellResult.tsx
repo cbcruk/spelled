@@ -4,7 +4,7 @@ import { SpellResultItem } from './SpellResultItem'
 import { Effect, Match, Schema } from 'effect'
 import { SpelledSchema } from '@/schema'
 import { ResultSet } from '@libsql/client'
-import { DatabaseError, TursoService, TursoServiceLive } from '@/services/Turso'
+import { TursoService, TursoServiceLive } from '@/services/Turso'
 import { SessionUserId } from '@/auth'
 
 type SpellResultBodyProps = SessionBodyProps
@@ -27,25 +27,15 @@ const decodeSpelling = (result: ResultSet) =>
   })
 
 const findSpellingByUserId = (id: SessionUserId) =>
-  TursoService.pipe(
-    Effect.andThen((turso) =>
-      Effect.tryPromise({
-        try: async () => {
-          const result = await turso.execute({
-            sql: 'SELECT * FROM spelling WHERE user_id = ?',
-            args: [id],
-          })
+  Effect.gen(function* () {
+    const turso = yield* TursoService
+    const result = yield* turso.execute({
+      sql: 'SELECT * FROM spelling WHERE user_id = ?',
+      args: [id],
+    })
 
-          return result
-        },
-        catch: (e) =>
-          new DatabaseError({
-            cause: e,
-            message: `데이터 조회에 실패했습니다.`,
-          }),
-      })
-    )
-  )
+    return result
+  }).pipe(Effect.provide(TursoServiceLive))
 
 const main = (id: SessionUserId) =>
   Effect.gen(function* () {
@@ -53,7 +43,7 @@ const main = (id: SessionUserId) =>
     const data = yield* decodeSpelling(result)
 
     return data
-  }).pipe(Effect.provide(TursoServiceLive))
+  })
 
 async function SpellResultBody({ user }: SpellResultBodyProps) {
   return (
@@ -66,10 +56,9 @@ async function SpellResultBody({ user }: SpellResultBodyProps) {
                 return <SpellResultItem key={row.id} data={row} />
               }),
             onFailure: Match.valueTags({
-              DatabaseError: (error) => (
-                <pre>DatabaseError: {error.message}</pre>
-              ),
-              ParseError: (error) => <pre>ParseError: {error.message}</pre>,
+              ParseError: () => <pre>ParseError</pre>,
+              DatabaseError: () => <pre>DatabaseError</pre>,
+              ConfigError: () => <pre>ConfigError</pre>,
             }),
           })
         )

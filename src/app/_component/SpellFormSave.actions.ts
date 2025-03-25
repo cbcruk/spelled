@@ -22,23 +22,21 @@ export const createSpelling = async (data: CheckSpellingStateData) =>
         return yield* Effect.fail(new Error('전달된 데이터가 없습니다.'))
       }
 
-      const result = yield* TursoService.pipe(
-        Effect.andThen((turso) =>
-          turso.execute({
-            sql: 'INSERT INTO spelling (user_id, input, corrected, score, corrections) VALUES(?, ?, ?, ?, ?)',
-            args: [
-              session.user.id,
-              data.input,
-              data.corrected,
-              data.score,
-              JSON.stringify(data.corrections),
-            ],
-          })
-        )
-      ).pipe(Effect.provide(TursoServiceLive))
+      const turso = yield* TursoService
+      const result = yield* turso.execute({
+        sql: 'INSERT INTO spelling (user_id, input, corrected, score, corrections) VALUES(?, ?, ?, ?, ?)',
+        args: [
+          session.user.id,
+          data.input,
+          data.corrected,
+          data.score,
+          JSON.stringify(data.corrections),
+        ],
+      })
 
       return result
     }).pipe(
+      Effect.provide(TursoServiceLive),
       Effect.match({
         onSuccess(data) {
           return {

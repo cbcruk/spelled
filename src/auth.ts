@@ -1,48 +1,79 @@
-import NextAuth, { Session } from 'next-auth'
+import NextAuth, { Profile, Session } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
-import { turso } from './lib/turso'
 import { Data, Effect } from 'effect'
+import { TursoService, TursoServiceLive } from './services/Turso'
+import { decodeUserId } from './schema'
+
+const findUserByEmail = (email: string) =>
+  Effect.gen(function* () {
+    const turso = yield* TursoService
+    const { rows } = yield* turso.execute({
+      sql: 'SELECT id FROM users WHERE email = ?',
+      args: [email],
+    })
+    const user = yield* decodeUserId(rows.at(0))
+
+    return user
+  }).pipe(
+    Effect.provide(TursoServiceLive),
+    Effect.match({
+      onSuccess(data) {
+        return data
+      },
+      onFailure(e) {
+        console.error(e._tag)
+        return null
+      },
+    })
+  )
+
+const createUser = (id: string, profile: Profile) =>
+  Effect.gen(function* () {
+    const row = yield* findUserByEmail(profile.email ?? '')
+
+    if (!row) {
+      const now = new Date().toISOString()
+      const name = profile.name ?? ''
+      const turso = yield* TursoService
+
+      yield* turso.execute({
+        sql: 'INSERT INTO users (id, name, email, created, updated) VALUES (?, ?, ?, ?, ?)',
+        args: [id, name, profile.email ?? '', now, now],
+      })
+    }
+  }).pipe(Effect.provide(TursoServiceLive))
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub],
   callbacks: {
     async signIn({ profile, user }) {
-      const email = profile?.email
-      const id = user.id
+      return Effect.runPromise(
+        Effect.gen(function* () {
+          const id = user.id
+          const email = profile?.email
 
-      if (!email || !id) {
-        return false
-      }
+          if (!id || !email) {
+            return false
+          }
 
-      const { rows } = await turso.execute({
-        sql: 'SELECT id FROM users WHERE email = ?',
-        args: [email],
-      })
+          yield* createUser(id, profile)
 
-      if (rows.length === 0) {
-        const now = new Date().toISOString()
-        const name = profile.name ?? ''
-
-        await turso.execute({
-          sql: 'INSERT INTO users (id, name, email, created, updated) VALUES (?, ?, ?, ?, ?)',
-          args: [id, name, email, now, now],
+          return Boolean(email)
         })
-      }
-
-      return Boolean(profile?.email)
+      )
     },
     async session({ session }) {
-      const { rows } = await turso.execute({
-        sql: 'SELECT id FROM users WHERE email = ?',
-        args: [session.user.email],
-      })
-      const row = rows.at(0)
+      return Effect.runPromise(
+        Effect.gen(function* () {
+          const row = yield* findUserByEmail(session.user.email)
 
-      if (row) {
-        session.user.id = row.id as string
-      }
+          if (row) {
+            session.user.id = row.id
+          }
 
-      return session
+          return session
+        })
+      )
     },
   },
 })
