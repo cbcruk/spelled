@@ -2,12 +2,12 @@
 
 import { useActionState } from 'react'
 import { createSpelling } from './SpellFormSave.actions'
-import { CheckSpellingStateData } from './SpellFormCheck.actions'
 import { BookmarkFilledIcon, BookmarkIcon } from '@radix-ui/react-icons'
 import { Match } from 'effect'
+import { Spelled } from '@/schema'
 
 type SpellFormSaveProps = {
-  data: CheckSpellingStateData
+  data: Spelled | null
 }
 
 export function SpellFormSave({ data }: SpellFormSaveProps) {

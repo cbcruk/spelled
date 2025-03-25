@@ -1,11 +1,11 @@
 'use server'
 
 import { getSession, SessionError } from '@/auth'
-import { CheckSpellingStateData } from './SpellFormCheck.actions'
 import { Effect } from 'effect'
 import { TursoService, TursoServiceLive } from '@/services/Turso'
+import { Spelled } from '@/schema'
 
-export const createSpelling = async (data: CheckSpellingStateData) =>
+export const createSpelling = async (data: Spelled | null) =>
   Effect.runPromise(
     Effect.gen(function* () {
       const session = yield* getSession
