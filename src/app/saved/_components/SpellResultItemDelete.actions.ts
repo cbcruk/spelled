@@ -1,14 +1,16 @@
 'use server'
 
-import { getSession, SessionError } from '@/auth'
-import { TursoService, TursoServiceLive } from '@/services/Turso'
+import { SessionError } from '@/auth'
+import { AuthService } from '@/services/Auth'
+import { TursoService } from '@/services/Turso'
 import { Effect } from 'effect'
 import { revalidatePath } from 'next/cache'
 
 export const deleteSpelling = async (_: unknown, formData: FormData) =>
   await Effect.runPromise(
     Effect.gen(function* () {
-      const session = yield* getSession
+      const auth = yield* AuthService
+      const session = yield* auth.get
 
       if (!session) {
         return yield* Effect.fail(
@@ -29,7 +31,8 @@ export const deleteSpelling = async (_: unknown, formData: FormData) =>
 
       return result
     }).pipe(
-      Effect.provide(TursoServiceLive),
+      Effect.provide(TursoService.Default),
+      Effect.provide(AuthService.Default),
       Effect.match({
         onSuccess(data) {
           return {

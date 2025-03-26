@@ -4,7 +4,7 @@ import { SpellResultItem } from './SpellResultItem'
 import { Effect, Match, Schema } from 'effect'
 import { SpelledSchema } from '@/schema'
 import { ResultSet } from '@libsql/client'
-import { TursoService, TursoServiceLive } from '@/services/Turso'
+import { TursoService } from '@/services/Turso'
 import { SessionUserId } from '@/auth'
 
 type SpellResultBodyProps = SessionBodyProps
@@ -35,7 +35,7 @@ const findSpellingByUserId = (id: SessionUserId) =>
     })
 
     return result
-  }).pipe(Effect.provide(TursoServiceLive))
+  }).pipe(Effect.provide(TursoService.Default))
 
 const main = (id: SessionUserId) =>
   Effect.gen(function* () {

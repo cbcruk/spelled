@@ -11,6 +11,9 @@ importers:
       '@effect/ai-openai':
         specifier: ^0.16.2
         version: 0.16.2(@effect/ai@0.13.1(@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/experimental@0.44.1(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9))(@effect/platform@0.80.1(effect@3.13.9))(effect@3.13.9)
+      '@effect/platform':
+        specifier: ^0.80.1
+        version: 0.80.1(effect@3.13.9)
       '@libsql/client':
         specifier: ^0.14.0
         version: 0.14.0

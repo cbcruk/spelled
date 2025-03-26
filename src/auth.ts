@@ -1,7 +1,7 @@
 import NextAuth, { Profile, Session } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import { Data, Effect } from 'effect'
-import { TursoService, TursoServiceLive } from './services/Turso'
+import { TursoService } from './services/Turso'
 import { decodeUserId } from './schema'
 
 const findUserByEmail = (email: string) =>
@@ -15,7 +15,7 @@ const findUserByEmail = (email: string) =>
 
     return user
   }).pipe(
-    Effect.provide(TursoServiceLive),
+    Effect.provide(TursoService.Default),
     Effect.match({
       onSuccess(data) {
         return data
@@ -41,7 +41,7 @@ const createUser = (id: string, profile: Profile) =>
         args: [id, name, profile.email ?? '', now, now],
       })
     }
-  }).pipe(Effect.provide(TursoServiceLive))
+  }).pipe(Effect.provide(TursoService.Default))
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub],
@@ -86,17 +86,6 @@ export type SessionWithUserId = Session & {
   }
 }
 
-export class AuthError extends Data.TaggedError('AuthError')<{
-  readonly message: string
-  readonly cause: unknown
-}> {}
-
 export class SessionError extends Data.TaggedError('SessionError')<{
   readonly message: string
 }> {}
-
-export const getSession = Effect.tryPromise({
-  try: () => auth() as Promise<SessionWithUserId | null>,
-  catch: (e) =>
-    new AuthError({ cause: e, message: '인증에러가 발생했습니다.' }),
-})

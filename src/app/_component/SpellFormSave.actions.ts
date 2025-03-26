@@ -1,14 +1,16 @@
 'use server'
 
-import { getSession, SessionError } from '@/auth'
+import { SessionError } from '@/auth'
 import { Effect } from 'effect'
-import { TursoService, TursoServiceLive } from '@/services/Turso'
+import { TursoService } from '@/services/Turso'
 import { Spelled } from '@/schema'
+import { AuthService } from '@/services/Auth'
 
 export const createSpelling = async (data: Spelled | null) =>
   Effect.runPromise(
     Effect.gen(function* () {
-      const session = yield* getSession
+      const auth = yield* AuthService
+      const session = yield* auth.get
 
       if (!session) {
         return yield* Effect.fail(
@@ -36,7 +38,8 @@ export const createSpelling = async (data: Spelled | null) =>
 
       return result
     }).pipe(
-      Effect.provide(TursoServiceLive),
+      Effect.provide(TursoService.Default),
+      Effect.provide(AuthService.Default),
       Effect.match({
         onSuccess(data) {
           return {

@@ -1,4 +1,5 @@
-import { getSession, SessionWithUserId } from '@/auth'
+import { SessionWithUserId } from '@/auth'
+import { AuthService } from '@/services/Auth'
 import { Effect, Match } from 'effect'
 import { FC, ReactNode } from 'react'
 
@@ -13,7 +14,13 @@ export async function Session({ children, fallback = null }: SessionProps) {
   return (
     <>
       {await Effect.runPromise(
-        getSession.pipe(
+        Effect.gen(function* () {
+          const auth = yield* AuthService
+          const session = yield* auth.get
+
+          return session
+        }).pipe(
+          Effect.provide(AuthService.Default),
           Effect.match({
             onSuccess: (session) =>
               Match.value(session).pipe(

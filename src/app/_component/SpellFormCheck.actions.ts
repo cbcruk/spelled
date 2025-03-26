@@ -1,7 +1,7 @@
 'use server'
 
 import { decodeSpelled } from '@/schema'
-import { OpenAIService, OpenAIServiceLive } from '@/services/OpenAI'
+import { OpenAIService } from '@/services/OpenAI'
 import { Effect } from 'effect'
 
 export const checkSpelling = async (text: string) =>
@@ -59,7 +59,7 @@ export const checkSpelling = async (text: string) =>
 
       return data
     }).pipe(
-      Effect.provide(OpenAIServiceLive),
+      Effect.provide(OpenAIService.Default),
       Effect.match({
         onSuccess: (data) => {
           return {
