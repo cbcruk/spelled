@@ -30,5 +30,7 @@ export const UserSchema = Schema.Struct({
   updated: Schema.String,
 })
 
+export type User = Schema.Schema.Type<typeof UserSchema>
+export type UserEmail = User['email']
+
 export const decodeUser = Schema.decodeUnknown(UserSchema)
-export const decodeUserId = Schema.decodeUnknown(UserSchema.pick('id'))

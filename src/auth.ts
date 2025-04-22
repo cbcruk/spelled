@@ -1,79 +1,48 @@
-import NextAuth, { Profile, Session } from 'next-auth'
+import NextAuth, { Session } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
-import { Data, Effect } from 'effect'
-import { TursoService } from './services/Turso'
-import { decodeUserId } from './schema'
-
-const findUserByEmail = (email: string) =>
-  Effect.gen(function* () {
-    const turso = yield* TursoService
-    const { rows } = yield* turso.execute({
-      sql: 'SELECT id FROM users WHERE email = ?',
-      args: [email],
-    })
-    const user = yield* decodeUserId(rows.at(0))
-
-    return user
-  }).pipe(
-    Effect.provide(TursoService.Default),
-    Effect.match({
-      onSuccess(data) {
-        return data
-      },
-      onFailure(e) {
-        console.error(e._tag)
-        return null
-      },
-    })
-  )
-
-const createUser = (id: string, profile: Profile) =>
-  Effect.gen(function* () {
-    const row = yield* findUserByEmail(profile.email ?? '')
-
-    if (!row) {
-      const now = new Date().toISOString()
-      const name = profile.name ?? ''
-      const turso = yield* TursoService
-
-      yield* turso.execute({
-        sql: 'INSERT INTO users (id, name, email, created, updated) VALUES (?, ?, ?, ?, ?)',
-        args: [id, name, profile.email ?? '', now, now],
-      })
-    }
-  }).pipe(Effect.provide(TursoService.Default))
+import { Data, Effect, pipe } from 'effect'
+import { decodeUser } from './schema'
+import { UserService } from './services/User'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub],
   callbacks: {
-    async signIn({ profile, user }) {
-      return Effect.runPromise(
-        Effect.gen(function* () {
-          const id = user.id
-          const email = profile?.email
+    async signIn({ user }) {
+      return Effect.gen(function* () {
+        const userService = yield* UserService
+        const validatedUser = yield* decodeUser(user)
 
-          if (!id || !email) {
-            return false
-          }
+        yield* pipe(
+          userService.findUserByEmail(validatedUser.email),
+          Effect.catchTag('NotFoundError', () =>
+            userService.createUser({
+              id: validatedUser.id,
+              name: validatedUser.name,
+              email: validatedUser.email,
+            })
+          )
+        )
 
-          yield* createUser(id, profile)
-
-          return Boolean(email)
-        })
-      )
+        return true
+      }).pipe(Effect.provide(UserService.Default), Effect.runPromise)
     },
     async session({ session }) {
-      return Effect.runPromise(
-        Effect.gen(function* () {
-          const row = yield* findUserByEmail(session.user.email)
+      return Effect.gen(function* () {
+        const userService = yield* UserService
 
-          if (row) {
-            session.user.id = row.id
-          }
+        yield* pipe(
+          userService.findUserByEmail(session.user.email),
+          Effect.matchEffect({
+            onSuccess: (user) =>
+              Effect.sync(() => {
+                session.user.id = user.id
+              }),
+            onFailure: () => Effect.void,
+          })
+        )
 
-          return session
-        })
-      )
+        return session
+      }).pipe(Effect.provide(UserService.Default), Effect.runPromise)
     },
   },
 })
