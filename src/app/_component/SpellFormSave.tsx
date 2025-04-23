@@ -3,11 +3,11 @@
 import { useActionState } from 'react'
 import { createSpelling } from './SpellFormSave.actions'
 import { BookmarkFilledIcon, BookmarkIcon } from '@radix-ui/react-icons'
-import { Match } from 'effect'
+import { Option } from 'effect'
 import { Spelled } from '@/schema'
 
 type SpellFormSaveProps = {
-  data: Spelled | null
+  data: Spelled
 }
 
 export function SpellFormSave({ data }: SpellFormSaveProps) {
@@ -19,9 +19,15 @@ export function SpellFormSave({ data }: SpellFormSaveProps) {
   return (
     <form action={formAction}>
       <button disabled={isPending} title="저장하기" className="cursor-pointer">
-        {Match.value(state).pipe(
-          Match.when({ data: Match.defined }, () => <BookmarkFilledIcon />),
-          Match.orElse(() => <BookmarkIcon />)
+        {Option.fromNullable(state).pipe(
+          Option.match({
+            onSome() {
+              return <BookmarkFilledIcon />
+            },
+            onNone() {
+              return <BookmarkIcon />
+            },
+          })
         )}
       </button>
     </form>
