@@ -1,6 +1,6 @@
-import NextAuth, { Session } from 'next-auth'
+import NextAuth from 'next-auth'
 import GitHub from 'next-auth/providers/github'
-import { Data, Effect, pipe } from 'effect'
+import { Effect, pipe } from 'effect'
 import { decodeUser } from './schema'
 import { UserService } from './services/User'
 
@@ -46,15 +46,3 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 })
-
-export type SessionUserId = string
-
-export type SessionWithUserId = Session & {
-  user: {
-    id: SessionUserId
-  }
-}
-
-export class SessionError extends Data.TaggedError('SessionError')<{
-  readonly message: string
-}> {}

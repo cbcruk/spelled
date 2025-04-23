@@ -19,6 +19,10 @@ export const SpelledSchema = Schema.Struct({
 
 export const decodeSpelled = Schema.decodeUnknown(SpelledSchema)
 
+export const decodeSpelledArray = Schema.decodeUnknown(
+  Schema.Array(SpelledSchema)
+)
+
 export type Spelled = Schema.Schema.Type<typeof SpelledSchema>
 
 export const UserSchema = Schema.Struct({
