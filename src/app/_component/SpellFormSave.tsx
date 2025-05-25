@@ -4,10 +4,10 @@ import { useActionState } from 'react'
 import { createSpelling } from './SpellFormSave.actions'
 import { BookmarkFilledIcon, BookmarkIcon } from '@radix-ui/react-icons'
 import { Option } from 'effect'
-import { Spelled } from '@/schema'
+import { SpelledWithoutId } from '@/schema'
 
 type SpellFormSaveProps = {
-  data: Spelled
+  data: SpelledWithoutId
 }
 
 export function SpellFormSave({ data }: SpellFormSaveProps) {

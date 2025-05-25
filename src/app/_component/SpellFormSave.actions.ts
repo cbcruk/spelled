@@ -2,10 +2,10 @@
 
 import { Effect } from 'effect'
 import { TursoService } from '@/services/Turso'
-import { Spelled } from '@/schema'
+import { SpelledWithoutId } from '@/schema'
 import { AuthService } from '@/services/Auth'
 
-export const createSpelling = async (body: Spelled) =>
+export const createSpelling = async (body: SpelledWithoutId) =>
   Effect.gen(function* () {
     const turso = yield* TursoService
     const authService = yield* AuthService

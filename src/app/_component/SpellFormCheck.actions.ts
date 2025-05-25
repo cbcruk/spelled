@@ -1,6 +1,6 @@
 'use server'
 
-import { decodeSpelled } from '@/schema'
+import { decodeSpelledWithoutId } from '@/schema'
 import { OpenAIService } from '@/services/OpenAI'
 import { Effect } from 'effect'
 
@@ -55,7 +55,7 @@ export const checkSpelling = async (text: string) =>
         presence_penalty: 0,
       })
       const content = chatCompletion.choices.at(0)?.message.content
-      const data = yield* decodeSpelled(JSON.parse(content ?? ''))
+      const data = yield* decodeSpelledWithoutId(JSON.parse(content ?? ''))
 
       return data
     }).pipe(

@@ -14,16 +14,20 @@ export const SpelledSchema = Schema.Struct({
   input: Schema.String,
   corrected: Schema.String,
   score: Schema.Number,
-  corrections: Schema.parseJson(Schema.Array(CorrectionSchema)),
+  corrections: Schema.Array(CorrectionSchema),
 })
 
+export const SpelledWithoutId = SpelledSchema.omit('id')
+
 export const decodeSpelled = Schema.decodeUnknown(SpelledSchema)
+export const decodeSpelledWithoutId = Schema.decodeUnknown(SpelledWithoutId)
 
 export const decodeSpelledArray = Schema.decodeUnknown(
   Schema.Array(SpelledSchema)
 )
 
 export type Spelled = Schema.Schema.Type<typeof SpelledSchema>
+export type SpelledWithoutId = Schema.Schema.Type<typeof SpelledWithoutId>
 
 export const UserSchema = Schema.Struct({
   id: Schema.String,
