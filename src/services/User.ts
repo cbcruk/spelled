@@ -14,7 +14,7 @@ export class UserService extends Effect.Service<UserService>()('UserService', {
       findUserByEmail: (email: UserEmail) =>
         Effect.gen(function* () {
           const result = yield* turso.execute({
-            sql: 'SELECT id FROM users WHERE email = ?',
+            sql: 'SELECT * FROM users WHERE email = ?',
             args: [email],
           })
           const row = yield* pipe(

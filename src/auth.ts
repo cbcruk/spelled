@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import { Effect, pipe } from 'effect'
-import { decodeUser } from './schema'
+import { decodeSignInUser } from './schema'
 import { UserService } from './services/User'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -10,7 +10,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn({ user }) {
       return Effect.gen(function* () {
         const userService = yield* UserService
-        const validatedUser = yield* decodeUser(user)
+        const validatedUser = yield* decodeSignInUser(user)
 
         yield* pipe(
           userService.findUserByEmail(validatedUser.email),

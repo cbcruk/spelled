@@ -33,7 +33,7 @@ export const UserSchema = Schema.Struct({
   id: Schema.String,
   name: Schema.String,
   email: Schema.String,
-  image: Schema.String,
+  image: Schema.NullOr(Schema.String),
   created: Schema.String,
   updated: Schema.String,
 })
@@ -42,3 +42,6 @@ export type User = Schema.Schema.Type<typeof UserSchema>
 export type UserEmail = User['email']
 
 export const decodeUser = Schema.decodeUnknown(UserSchema)
+export const decodeSignInUser = Schema.decodeUnknown(
+  UserSchema.omit('created', 'updated')
+)
