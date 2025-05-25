@@ -14,19 +14,28 @@ export const SpelledSchema = Schema.Struct({
   input: Schema.String,
   corrected: Schema.String,
   score: Schema.Number,
+})
+
+const SpelledSchemaFromOpenAI = Schema.Struct({
+  ...SpelledSchema.fields,
   corrections: Schema.Array(CorrectionSchema),
 })
 
-export const SpelledWithoutId = SpelledSchema.omit('id')
+const SpelledSchemaFromDB = Schema.Struct({
+  ...SpelledSchema.fields,
+  corrections: Schema.parseJson(Schema.Array(CorrectionSchema)),
+})
 
-export const decodeSpelled = Schema.decodeUnknown(SpelledSchema)
+export const SpelledWithoutId = SpelledSchemaFromOpenAI.omit('id')
+
+export const decodeSpelled = Schema.decodeUnknown(SpelledSchemaFromOpenAI)
 export const decodeSpelledWithoutId = Schema.decodeUnknown(SpelledWithoutId)
 
 export const decodeSpelledArray = Schema.decodeUnknown(
-  Schema.Array(SpelledSchema)
+  Schema.Array(SpelledSchemaFromDB)
 )
 
-export type Spelled = Schema.Schema.Type<typeof SpelledSchema>
+export type Spelled = Schema.Schema.Type<typeof SpelledSchemaFromOpenAI>
 export type SpelledWithoutId = Schema.Schema.Type<typeof SpelledWithoutId>
 
 export const UserSchema = Schema.Struct({

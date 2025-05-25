@@ -12,10 +12,10 @@ const main = () =>
 
     const id = yield* authService.getUserId()
     const result = yield* tursoService.execute({
-      sql: 'SELECT * FROM spelling WHERE user_id = ?',
+      sql: 'SELECT id, input, corrected, score, corrections FROM spelling WHERE user_id = ?',
       args: [id],
     })
-    const data = yield* decodeSpelledArray(result)
+    const data = yield* decodeSpelledArray(result.rows)
 
     return data
   }).pipe(
